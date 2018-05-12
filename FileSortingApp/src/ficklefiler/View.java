@@ -35,8 +35,7 @@ import javafx.stage.Stage;
 public class View {
     
     //This should be a dynamic/relative path someday.
-    String INITIAL_DIRECTORY_PATH = "\\Pictures\\TestDirectory";
-    
+    String INITIAL_DIRECTORY_PATH = "C:\\Users\\Justin\\Pictures";
     
     private final Stage m_primaryStage;
     
@@ -56,7 +55,7 @@ public class View {
     private final Button m_addCategoryButton;
     
     //Category Buttons List
-    private ArrayList<Button> m_categoryButtons;
+    private final ArrayList<Button> m_categoryButtons;
     
     //Scenes
     private Scene m_openingScene;
@@ -73,7 +72,11 @@ public class View {
         
         m_directoryChooser = new DirectoryChooser();
         m_directoryChooser.setTitle("Open Directory of Images");
-        m_directoryChooser.setInitialDirectory(new File(INITIAL_DIRECTORY_PATH));
+        File initialDirectory = new File(INITIAL_DIRECTORY_PATH);
+        if (initialDirectory.isDirectory()) {
+            m_directoryChooser.setInitialDirectory(initialDirectory);
+        }
+        
         
         m_categoryButtons = new ArrayList<>();
         
@@ -105,13 +108,17 @@ public class View {
     }
     
     private void buildOpeningScene() {
+        HBox buttonBox = new HBox();
+        buttonBox.setPadding(new Insets(0, 10, 10, 10));
+        buttonBox.setSpacing(10);
+        buttonBox.getChildren().addAll(m_quitButton, m_chooseDirectoryButton);
+        
         GridPane gPane = new GridPane();
         gPane.setVgap(25);
         gPane.setHgap(5);
         gPane.setAlignment(Pos.CENTER);
         gPane.add(m_mainWindowLabel, 0, 0);
-        gPane.add(m_quitButton, 0, 1);
-        gPane.add(m_chooseDirectoryButton, 1, 1);
+        gPane.add(buttonBox, 0, 1);
         
         m_openingScene = new Scene(gPane, 250, 250);
         m_primaryStage.setScene(m_openingScene);
@@ -123,11 +130,8 @@ public class View {
             // Complaint Dialog "No Images in Chosen Directory", force new directory choice
         }
         m_imagePreviewPane = new StackPane();
-        m_imagePreviewPane.setPrefSize(300, 300);
         ImageView iv = new ImageView(image);
-        iv.setX(300);
-        iv.setY(300);
-        iv.setFitWidth(300);
+        iv.setFitWidth(600);
         iv.setPreserveRatio(true);
         iv.setSmooth(true);
         iv.setCache(true);
@@ -141,7 +145,6 @@ public class View {
         FlowPane buildCategoryBox = buildCategoryBox();
         
         AnchorPane rootSortPane = new AnchorPane(buttonBox,buildCategoryBox, m_imagePreviewPane);
-        rootSortPane.setPrefSize(500, 500);
         
         AnchorPane.setBottomAnchor(buttonBox, 2.5);
         AnchorPane.setLeftAnchor(buttonBox, 2.5);
@@ -152,6 +155,8 @@ public class View {
         AnchorPane.setRightAnchor(buildCategoryBox, 2.5);
         
         m_sortScene = new Scene(rootSortPane);
+        m_primaryStage.setHeight(600);
+        m_primaryStage.setWidth(800);
         m_primaryStage.setScene(m_sortScene);
     }
     
@@ -163,9 +168,7 @@ public class View {
             System.out.println("Is ImageView");
             ImageView iv = (ImageView) childNode;
             iv.setImage(image);
-            iv.setX(350);
-            iv.setY(350);
-            iv.setFitWidth(350);
+            iv.setFitWidth(600);
             iv.setPreserveRatio(true);
             iv.setSmooth(true);
             iv.setCache(true);

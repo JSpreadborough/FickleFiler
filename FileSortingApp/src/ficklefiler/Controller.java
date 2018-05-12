@@ -15,16 +15,10 @@ import javafx.scene.image.Image;
  */
 public final class Controller {
     
-    //This should be a dynamic/relative path someday.
-    String INITIAL_DIRECTORY_PATH = "\\Pictures\\TestDirectory";
-    
-    File defaultDirectory;
-    
     Model m_model;
     View m_view;
 
     public Controller(Model model, View view) {
-        defaultDirectory = new File(INITIAL_DIRECTORY_PATH);
         
         this.m_model = model;
         this.m_view = view;
@@ -54,18 +48,13 @@ public final class Controller {
                 try {
                     //The top level directory to sort.
                     File showDialog = m_view.getDirectoryChooser().showDialog(m_view.getPrimaryStage());
-
+                    
                     if (showDialog == null) {
-                        if (defaultDirectory.isDirectory()) {
-                            m_model.filterForImages(defaultDirectory);
-                        }
+                      //Unable to get a directory; display directory chooser again?
+                      m_view.getDirectoryChooser().showDialog(m_view.getPrimaryStage());  
                     } else if (showDialog.isDirectory()) {
                         m_model.filterForImages(showDialog);
-                    } else {
-                        //Unable to get a directory; display directory chooser again?
-                        m_view.getDirectoryChooser().showDialog(m_view.getPrimaryStage());
-                    }
-                    
+                    }                     
                     //Send list of images to viewer to iterate over with next and previous buttons.
                     m_view.buildSortScene(m_model.getNextImage());
                 } catch (NullPointerException e) {

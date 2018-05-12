@@ -17,6 +17,9 @@ import javafx.stage.Stage;
  */
 public class FickleFiler extends Application{
     
+    //This should be a dynamic/relative path someday.
+    String INITIAL_DIRECTORY_PATH = "C:\\Users\\Justin\\Pictures\\TestDirectory";
+    
     /**
      * @param args the command line arguments
      */
