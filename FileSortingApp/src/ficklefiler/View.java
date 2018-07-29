@@ -8,10 +8,7 @@ package ficklefiler;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Optional;
-import javafx.application.Platform;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -228,72 +225,24 @@ public class View {
         return m_directoryChooser;
     }
     
-    // Setup Directory Chooser
-    public void assignDirectoryButtonAction(EventHandler<ActionEvent> handler) {
-        m_chooseDirectoryButton.setOnAction(handler);
+    public Button getDirectoryButton() {
+        return m_chooseDirectoryButton;
     }
     
-    public File getChoosenDirectory() {
-        //The top level directory to sort.
-        return m_directoryChooser.showDialog(getPrimaryStage());
+    public Button getQuitButton() {
+        return m_quitButton;
     }
     
-    // Setup Quit button
-    public void assignQuitButtonAction(EventHandler<ActionEvent> handler) {
-        m_quitButton.setOnAction(handler);
+    public Button getPreviousButton() {
+        return m_previousButton;
     }
     
-    
-    
-    public void assignNextButtonAction(EventHandler<ActionEvent> handler) {
-        m_nextButton.setOnAction(handler);
+    public Button getNextButton() {
+        return m_nextButton;
     }
     
-    
-    
-    public void setPreviousButtonAction(EventHandler<ActionEvent> handler) {
-        m_chooseDirectoryButton.setOnAction(handler);
-    }
-    
-    
-    
-    
-    
-    
-    public void updateImagePreview(Image nextImage) {
-        // If image null do nothing.
-        if (nextImage != null) {
-            updateImagePreviewPane(m_imagePreviewPane, nextImage);
-        } else {
-            System.out.println("Next Image Null");
-        }
-    }
-    
-    public void assignPreviousButtonAction(Image previousImage) {
-        m_previousButton.setOnAction(
-            event -> {
-                try {
-                    if (previousImage != null) {
-                        updateImagePreviewPane(m_imagePreviewPane, previousImage);
-                    } else {
-                        System.out.println("Previous Image Null");
-                    }
-                    
-                } catch (Exception e) {
-                    
-                }
-            });
-    }
-    
-    public void assignAddCategoryButtonAction() {
-        m_addCategoryButton.setOnAction(
-        event -> {
-            try {
-                createNewCategory(getCategoryName());
-            } catch (Exception e) {
-
-            }
-        });
+    public Button getAddCategoryButton() {
+        return m_addCategoryButton;
     }
     
     public Stage getPrimaryStage() {
