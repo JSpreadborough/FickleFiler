@@ -49,7 +49,7 @@ public class Model {
                 iterator.remove();
             }
         }
-        
+        m_currentImageIndex = 0;
     }
     
     public Image getNextImage() {
