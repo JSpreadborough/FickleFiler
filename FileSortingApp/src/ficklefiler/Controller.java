@@ -43,7 +43,6 @@ public final class Controller {
     }
 
     public void setupDirectoryButtonAction(){
-        
         m_view.assignDirectoryButtonAction(event -> {
             try {
                 // Use a listener for the directory.
@@ -52,8 +51,11 @@ public final class Controller {
                 if (choosenDirectoryPath.isDirectory()) {
                     m_model.filterForImages(choosenDirectoryPath);
                 }
+                System.out.println("Hello?");
+                m_view.buildSortScene(m_model.getNextImage());
+                System.out.println("Whats going on?");
             } catch (Exception e) {
-
+                e.printStackTrace();
             }
         });
     }
@@ -65,22 +67,32 @@ public final class Controller {
     
     public void setupNextButtonAction() {
         m_view.assignNextButtonAction(event -> {
-                try {
-                    m_view.updateImagePreview(m_model.getNextImage());
-                } catch (Exception e) {
-                    
-                }
-            });
-        
-        
+            try {
+                m_view.updateImagePreview(m_model.getNextImage());
+            } catch (Exception e) {
+
+            }
+        });
     }
 
     public void setupPreviousButtonAction() {
-        m_view.assignPreviousButtonAction(m_model.getPreviousImage());
+        m_view.assignPreviousButtonAction(event -> {
+            try {
+                m_view.updateImagePreview(m_model.getPreviousImage());
+            } catch (Exception e) {
+
+            }
+        });
     }
     
     public void setupAddNewCategoryButtonAction() {
-        m_view.assignAddCategoryButtonAction();
+        m_view.assignAddCategoryButtonAction(event -> {
+            try {
+                m_view.createNewCategory();
+            } catch (Exception e) {
+
+            }
+        });
     }
 
 }

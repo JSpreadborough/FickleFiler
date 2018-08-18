@@ -128,8 +128,9 @@ public class View {
     }
     
     public void buildSortScene(Image image) {
-        
+        System.out.println("Building Sort Scene");
         if (image == null) {
+            System.out.println("Image is Null to Build Sort Scene");
             // Complaint Dialog "No Images in Chosen Directory", force new directory choice
         }
         m_imagePreviewPane = new StackPane();
@@ -204,8 +205,8 @@ public class View {
         return m_categoryBox;
     }
     
-    public void createNewCategory(String categoryName) {
-        Button newCategoryButton = new Button(categoryName);
+    public void createNewCategory() {
+        Button newCategoryButton = new Button(getCategoryName());
         m_categoryButtons.add(newCategoryButton);
         m_categoryBox.getChildren().addAll(newCategoryButton);
         
@@ -251,11 +252,14 @@ public class View {
     
     
     
-    public void setPreviousButtonAction(EventHandler<ActionEvent> handler) {
-        m_chooseDirectoryButton.setOnAction(handler);
+    public void assignPreviousButtonAction(EventHandler<ActionEvent> handler) {
+        m_previousButton.setOnAction(handler);
     }
     
-    
+    public void assignAddCategoryButtonAction(EventHandler<ActionEvent> handler) {
+        m_addCategoryButton.setOnAction(handler);
+        
+    }
     
     
     
@@ -269,32 +273,7 @@ public class View {
         }
     }
     
-    public void assignPreviousButtonAction(Image previousImage) {
-        m_previousButton.setOnAction(
-            event -> {
-                try {
-                    if (previousImage != null) {
-                        updateImagePreviewPane(m_imagePreviewPane, previousImage);
-                    } else {
-                        System.out.println("Previous Image Null");
-                    }
-                    
-                } catch (Exception e) {
-                    
-                }
-            });
-    }
     
-    public void assignAddCategoryButtonAction() {
-        m_addCategoryButton.setOnAction(
-        event -> {
-            try {
-                createNewCategory(getCategoryName());
-            } catch (Exception e) {
-
-            }
-        });
-    }
     
     public Stage getPrimaryStage() {
         return m_primaryStage;
