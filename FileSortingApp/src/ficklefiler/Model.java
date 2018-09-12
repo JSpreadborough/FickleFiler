@@ -12,8 +12,7 @@ import java.nio.file.FileSystems;
 import java.nio.file.PathMatcher;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
-import java.util.ListIterator;
+import java.util.Stack;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.scene.image.Image;
@@ -24,41 +23,42 @@ import javafx.scene.image.Image;
  */
 public class Model {
     
+    private Stack m_actionHistory;
+    
     private final ArrayList<File> m_fileList;
     
-    private ListIterator m_fileListIterator;
+    private int currentImageIndex;
     
     // Supported image extensions.
     private final String imgExts;
     
     public Model(){
         m_fileList = new ArrayList<>();
-        m_fileListIterator = m_fileList.listIterator();
+        // filter needs to happen before init of iterator.
+        currentImageIndex = 0;
         //Can't have spaces! Very literal!
         imgExts = "glob:**.{png,jpg,gif}";
     }
     
-    public void filterForImages(File startingDirectory){
+    public void populateImages(File startingDirectory){
         m_fileList.addAll(Arrays.asList(startingDirectory.listFiles()));
         System.out.println("m_fileList size = " + m_fileList.size());
-        
-        PathMatcher matcher = FileSystems.getDefault().getPathMatcher(imgExts);
-        Iterator<File> iterator = m_fileList.iterator();
-        while (iterator.hasNext()) {
-            File nextFile = iterator.next();
-            if (!matcher.matches(nextFile.toPath())) {
-                System.out.println("removing invalid file = " + nextFile.getName());
-                iterator.remove();
-            }
-        }
     }
     
     public Image getNextImage() {
-        if (m_fileListIterator.hasNext()) {
-            File file = (File) m_fileListIterator.next();
+        System.out.println("File List Size: " + m_fileList.size());
+        currentImageIndex++;
+        if (currentImageIndex == m_fileList.size()) {
+            currentImageIndex = 0;
+        }
+            File nextFile = verifyImage((File) m_fileList.get(currentImageIndex), true);
+            
             try {
-                if (file != null) {
-                    URL imageURL = file.toURI().toURL();
+                if (nextFile != null) {
+                    
+                    
+
+                    URL imageURL = nextFile.toURI().toURL();
                     System.out.println("imageURL = " + imageURL.toString());
                     return new Image(imageURL.toString());
                 }
@@ -66,29 +66,55 @@ public class Model {
                 System.out.println("MalformedURL Exception on next");
                 Logger.getLogger(Model.class.getName()).log(Level.SEVERE, null, ex);
             }
-        } 
-           
         return null;
         
     }
     
     public Image getPreviousImage() {
-        if (m_fileListIterator.hasPrevious()) {
-            File file = (File) m_fileListIterator.previous();
+        
+        currentImageIndex--;
+        if (currentImageIndex < 0) {
+            currentImageIndex = m_fileList.size() - 1;
+        }
+        
+        File previousFile = verifyImage((File) m_fileList.get(currentImageIndex), false);
 
-            try {
-                if (file != null) {
-                    URL imageURL = file.toURI().toURL();
-                    System.out.println("imageURL = " + imageURL.toString());
-                    return new Image(imageURL.toString());
-                }
-            } catch (MalformedURLException ex) {
-                System.out.println("MalformedURL Exception on next");
-                Logger.getLogger(Model.class.getName()).log(Level.SEVERE, null, ex);
+        try {
+            if (previousFile != null) {
+
+                verifyImage(previousFile, false);
+
+                URL imageURL = previousFile.toURI().toURL();
+                System.out.println("imageURL = " + imageURL.toString());
+                return new Image(imageURL.toString());
             }
+        } catch (MalformedURLException ex) {
+            System.out.println("MalformedURL Exception on previous");
+            Logger.getLogger(Model.class.getName()).log(Level.SEVERE, null, ex);
         }
         
         return null;
     }
     
+    private File verifyImage(File file, boolean isNext) {
+        if (file == null) {
+            return null;
+        }
+        
+        PathMatcher matcher = FileSystems.getDefault().getPathMatcher(imgExts);
+        if (!matcher.matches(file.toPath())) {
+            System.out.println("removing invalid file = " + file.getName());
+            m_fileList.remove(currentImageIndex);
+            if (isNext) {
+                currentImageIndex--;
+            } else {
+                // If not next it is previous
+                currentImageIndex++;
+            }
+            // Retrieved an invalid file format.
+            return null;
+        } else {
+            return file;
+        }
+    }
 }

@@ -132,6 +132,8 @@ public class View {
         if (image == null) {
             System.out.println("Image is Null to Build Sort Scene");
             // Complaint Dialog "No Images in Chosen Directory", force new directory choice
+            // Relaunches directory chooser I think?
+//            m_chooseDirectoryButton.fire();
         }
         m_imagePreviewPane = new StackPane();
         ImageView iv = new ImageView(image);
@@ -205,11 +207,11 @@ public class View {
         return m_categoryBox;
     }
     
-    public void createNewCategory() {
+    public Button createNewCategory() {
         Button newCategoryButton = new Button(getCategoryName());
         m_categoryButtons.add(newCategoryButton);
         m_categoryBox.getChildren().addAll(newCategoryButton);
-        
+        return newCategoryButton;
     }
     
     public String getCategoryName() {
@@ -258,7 +260,10 @@ public class View {
     
     public void assignAddCategoryButtonAction(EventHandler<ActionEvent> handler) {
         m_addCategoryButton.setOnAction(handler);
-        
+    }
+    
+    public void assignCategoryButtonAction(EventHandler<ActionEvent> handler) {
+        m_addCategoryButton.setOnAction(handler);
     }
     
     

@@ -7,6 +7,7 @@ package ficklefiler;
 
 import java.io.File;
 import javafx.application.Platform;
+import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 
 /**
@@ -48,11 +49,12 @@ public final class Controller {
                 // Use a listener for the directory.
                 File choosenDirectoryPath = m_view.getChoosenDirectory();
 
-                if (choosenDirectoryPath.isDirectory()) {
-                    m_model.filterForImages(choosenDirectoryPath);
+                if (choosenDirectoryPath != null && choosenDirectoryPath.isDirectory()) {
+                    m_model.populateImages(choosenDirectoryPath);
                 }
                 System.out.println("Hello?");
-                m_view.buildSortScene(m_model.getNextImage());
+                Image nextImage = m_model.getNextImage();
+                m_view.buildSortScene(nextImage);
                 System.out.println("Whats going on?");
             } catch (Exception e) {
                 e.printStackTrace();
